@@ -1,0 +1,56 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<!-- beautify ignore:start -->
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact " dir="ltr" data-theme="theme-semi-dark" data-assets-path="~/admin/" data-template="vertical-menu-template-semi-dark">
+
+@{
+    await Html.RenderPartialAsync("_PartialHead");
+}
+
+<body>
+
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            @{
+                await Html.RenderPartialAsync("_PartialNavMenu");
+            }
+            
+            <!-- / Menu -->
+            <!-- Layout container -->
+            <div class="layout-page">
+
+                <!-- Navbar -->
+                @{
+                    await Html.RenderPartialAsync("_PartialNavBar");
+                }
+                <!-- / Navbar -->
+                
+                @RenderBody()
+
+            </div>
+            <!-- / Layout page -->
+        </div>
+
+
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+    </div>
+    <!-- / Layout wrapper -->
+    @{
+        await Html.RenderPartialAsync("_PartialImportJs");
+    }
+</body>
+
+
+</html>
+
+<!-- beautify ignore:end -->

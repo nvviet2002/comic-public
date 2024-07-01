@@ -1,0 +1,258 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Comic.Domain.ResponseModels.PaginateModel
+@using Comic.Domain.ResponseModels.StoryModel
+@using Comic.WebClient.Common
+@{
+    Layout = "_ClientLayout";
+    ViewBag.Title = "TruyenVV - Trang chủ | Web truyện hàng đầu Việt Nam";
+    ViewBag.Page = "Home";
+
+    var paginatedStories = ViewBag.PaginatedStories as PaginateRes<StoryRes>;
+    var recommendStories = ViewBag.RecommendStories as PaginateRes<StoryRes>;
+}
+<div class="content">
+    <div class="container-xl wide bg-light">
+        <!-- carousel -->
+        <div class="carousel">
+            <h2 class="carousel-title">Truyện đề cử ></h2>
+            <div class="owl-carousel owl-theme">
+                @foreach(var story in recommendStories.Items)
+                {
+                    <div class="item carousel-item-container">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Detail" 
+                        asp-route-slug="@story.Slug" asp-route-id="@story.Id">
+                            <img src="@story.Avatar" alt="@story.Name" class="carousel-item-img center" />
+                            <div class="carousel-item-overlay">
+                                <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                                   asp-route-slug="@story.Slug" asp-route-id="@story.Id" 
+                                   class="carousel-item-title"><p class="reset fs-16">@story.Name</p></a>
+                                <div class="carousel-item-info">
+                                    @{
+                                        var firstChapter = story.Chapters.FirstOrDefault();
+                                        if(firstChapter == null)
+                                        {
+                                            <span class="carousel-item-chapter reset">Đang cập nhật</span>
+                                        }else{
+                                            <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                               asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@firstChapter.Slug"
+                                               asp-route-id="@firstChapter.Id" class="carousel-item-chapter reset">@firstChapter.Name</a>
+                                            <div>
+                                                <i class="fa-regular fa-clock"></i>
+                                                <span class="time fs-13">@RazorHelper.UtcToComicString(firstChapter.UpdatedAt)</span>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                            @if (story.HotFlag)
+                            {
+                                <span class="icon-hot"></span>
+                            }
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- carousel -->
+
+        <div class="main">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="main-header">
+                        <h1 class="heading">Truyện mới cập nhật ></h1>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort=""
+                           asp-route-slug="tat-ca" asp-route-id="" class="filter">
+                           <i class="fa-solid fa-filter"></i></a>
+                    </div>
+                    @if (paginatedStories.Items.Count() <= 0 || paginatedStories.Items == null)
+                    {
+                        <h2 class="p-3 w-100 text-center">Không tìm thấy truyện</h2>
+                    }else{
+
+                        <div class="main-cards row">
+                            @foreach (var story in paginatedStories.Items)
+                            {
+                                <!-- a card -->
+                                <div class="col-6 col-sm-4 col-md-3 px-2 py-3">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                                       asp-route-slug="@story.Slug" asp-route-id="@story.Id">
+                                        <div class="main-card-image">
+                                            <img src="@story.Avatar" alt="@story.Name" class="center" />
+                                            <div class="main-card-overlay">
+                                                <i class="fa-solid fa-eye"></i>
+                                                @story.View
+                                                <i class="fa-solid fa-comment"></i>
+                                                @story.Comment
+                                                <i class="fa-solid fa-heart"></i>
+                                                @story.Follow
+                                            </div>
+                                            @if (story.HotFlag)
+                                            {
+                                                <span class="icon-hot"></span>
+                                            }
+                                        </div>
+                                    </a>
+                                    <div class="main-card-info">
+
+                                        <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                                           asp-route-slug="@story.Slug" asp-route-id="@story.Id"
+                                           class="main-card-title fw-500">@story.Name</a>
+                                        <div class="main-card-chapters">
+                                            @foreach (var chapter in story.Chapters)
+                                            {
+                                                <div class="main-card-chapter">
+                                                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                                       asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@chapter.Slug"
+                                                       asp-route-id="@chapter.Id" class="fs-14">@chapter.Name</a>
+                                                    <span class="fs-13">@RazorHelper.UtcToComicString(chapter.UpdatedAt)</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- a card -->
+                            }
+                        </div>
+                        <!-- a pagination -->
+                        <div class="d-flex justify-content-center w-100">
+                            <ul class="pagination">
+                                @if (paginatedStories.PagePrevious == paginatedStories.PageNumber)
+                                {
+                                    <li class="page-item disabled text-muted">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="1">
+                                            <span>&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled text-muted">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@paginatedStories.PagePrevious">
+                                            <span>&lt;</span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="1">
+                                            <span>&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@paginatedStories.PagePrevious">
+                                            <span>&lt;</span>
+                                        </a>
+                                    </li>
+                                }
+                                @{
+                                    //caculate start page to end page
+                                    int maxPage = 5;
+                                    int startPage, endPage;
+                                    if (paginatedStories.TotalPages <= maxPage)
+                                    {
+                                        startPage = 1;
+                                        endPage = paginatedStories.TotalPages;
+                                    }
+                                    else
+                                    {
+                                        int rangePage = (int)Math.Floor((decimal)maxPage / 2);
+                                        if (paginatedStories.PageNumber - rangePage <= 0)
+                                        {
+                                            startPage = 1;
+                                        }
+                                        else
+                                        {
+                                            startPage = paginatedStories.PageNumber - rangePage;
+                                        }
+
+                                        if (paginatedStories.PageNumber + rangePage > paginatedStories.TotalPages)
+                                        {
+                                            endPage = paginatedStories.TotalPages;
+                                        }
+                                        else
+                                        {
+                                            endPage = paginatedStories.PageNumber + rangePage;
+                                        }
+                                        //scale to maxpage
+                                        if (endPage - startPage < maxPage)
+                                        {
+                                            if (paginatedStories.PageNumber <= rangePage)
+                                            {
+                                                endPage += rangePage - (paginatedStories.PageNumber - 1);
+                                            }
+                                            if (paginatedStories.PageNumber > paginatedStories.TotalPages - rangePage)
+                                            {
+                                                startPage -= rangePage - (paginatedStories.TotalPages - paginatedStories.PageNumber);
+                                            }
+                                        }
+
+                                    }
+                                }
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    @if (i == paginatedStories.PageNumber)
+                                    {
+                                        <li class="page-item active">
+                                            <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                               asp-action="Index" asp-route-page="@i">@i</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                               asp-action="Index" asp-route-page="@i">@i</a>
+                                        </li>
+                                    }
+                                }
+                                @if (paginatedStories.PageNext == paginatedStories.PageNumber)
+                                {
+                                    <li class="page-item disabled text-muted">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@paginatedStories.PageNext">
+                                            <span>&gt;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled text-muted">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@paginatedStories.TotalPages">
+                                            <span>&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@paginatedStories.PageNext">
+                                            <span>&gt;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@paginatedStories.TotalPages">
+                                            <span>&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <!-- a pagination -->
+                    }
+                </div>
+                <div class="col-12 col-lg-4">
+                    <!-- tab -->
+                    @{
+                        await Html.RenderPartialAsync("_PartialSideBar");
+                    }
+                    <!-- tab -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý vai trò";
+    ViewBag.Page = "Role";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+
+    <h4 class="mb-4">Danh sách vai trò</h4>
+    <!-- Role cards -->
+    <div class="row g-4" id="roleContainer">
+        
+    </div>
+    <!--/ Role cards -->
+    <!-- Add Role Modal -->
+    <div class="modal fade" id="addRoleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-add-new-role">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="role-title mb-2">Thêm vai trò</h3>
+                        <p class="text-muted">Đăng ký quyền cho vai trò</p>
+                    </div>
+                    <!-- Add role form -->
+                    <form id="addRoleForm" class="row g-3">
+                        <div class="col-12 mb-4">
+                            <label class="form-label" for="addRoleName">Tên vai trò</label>
+                            <input type="text" id="addRoleName" name="addRoleName" class="form-control" placeholder="Nhập tên..." tabindex="-1" />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-12">
+                            <h5>Phân quyền</h5>
+                            <!-- Permission table -->
+                            <div class="table-responsive">
+                                <table class="table table-flush-spacing" id="addRolePermissionTable">
+                                    <tbody>
+     
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Permission table -->
+                        </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Thêm</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                    <!--/ Add role form -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Add Role Modal -->
+    <!-- Edit Role Modal -->
+    <div class="modal fade" id="editRoleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-new-role">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="role-title mb-2">Sửa vai trò</h3>
+                        <p class="text-muted">Đăng ký quyền cho vai trò</p>
+                    </div>
+                    <!-- Add role form -->
+                    <form id="editRoleForm" class="row g-3">
+                        <div class="col-12 mb-4">
+                            <label class="form-label" for="editRoleName">Tên vai trò</label>
+                            <input type="text" id="editRoleName" name="editRoleName" class="form-control" placeholder="Nhập tên..." tabindex="-1" />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-12">
+                            <h5>Phân quyền</h5>
+                            <!-- Permission table -->
+                            <div class="table-responsive">
+                                <table class="table table-flush-spacing" id="editRolePermissionTable">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Permission table -->
+                        </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Sửa</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                    <!--/ Add role form -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Edit Role Modal -->
+
+</div>

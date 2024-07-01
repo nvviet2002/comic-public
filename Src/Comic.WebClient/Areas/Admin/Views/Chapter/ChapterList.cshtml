@@ -1,0 +1,241 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý chapter";
+    ViewBag.Page = "Chapter";
+}
+<script>var storyId = "@ViewBag.StoryId";</script>
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <h4 class="mb-4">Danh sách truyện</h4>
+
+    <div class="card">
+        <div class="card-datatable text-nowrap table-responsive">
+            <table id="chapterDatatable" class="datatables-ajax table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Chỉ mục</th>
+                        <th>Tên</th>
+                        <th>Tiêu đề</th>
+                        <th>Lượt xem</th>
+                        <th>Bình luận</th>
+                        <th>Cập nhật lúc</th>
+                        <th>Tạo lúc</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!-- Add chapter Modal -->
+    <div class="modal fade" id="addChapterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Thêm mới chapter</h3>
+                    </div>
+                    <form id="addChapterForm" class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="addChapterIndex" class="form-label">Chỉ mục</label>
+                            <input type="text" id="addChapterIndex" name="addChapterIndex" class="form-control" placeholder="0" />
+                            <ul class="text-danger validate validateIndex"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addChapterName">Tên chapter</label>
+                            <input type="text" id="addChapterName" name="addChapterName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addChapterTitle">Tiêu đề</label>
+                            <input type="text" id="addChapterTitle" name="addChapterTitle" class="form-control" placeholder="Tiêu đề..." />
+                            <ul class="text-danger validate validateTitle"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addChapterMetaKeyword">Từ khóa tìm kiếm</label>
+                            <textarea role="3" id="addChapterMetaKeyword" name="addChapterMetaKeyword" class="form-control" placeholder="Từ khóa tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaKeyword"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addChapterMetaDescription">Mô tả tìm kiếm</label>
+                            <textarea role="3" id="addChapterMetaDescription" name="addChapterMetaDescription" class="form-control" placeholder="Mô tả tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="addChapterView" class="form-label">Lượt xem</label>
+                            <input type="text" id="addChapterView" name="addChapterView" class="form-control" placeholder="0" />
+                            <ul class="text-danger validate validateView"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="addChapterImages">Hình ảnh</label>
+                            <input type="file" id="addChapterImages" name="addChapterImages" class="form-control" accept="image/*" multiple/>
+                            <ul class="text-danger validate validateImages"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div id="addChapterImagesPreview">
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="addChapterStatus" class="form-label">Tình trạng</label>
+                            <select id="addChapterStatus" name="addChapterStatus" class="selectpicker w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <option value="Full">Đã hoàn thành</option>
+                                <option value="Raw">Một phần</option>
+                            </select>
+                            <ul class="text-danger validate validateStatus"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="addChapterHotFlag">Hot</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="addChapterHotFlag" name="addChapterHotFlag" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateHotFlag"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="addChapterIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="addChapterIsActived" name="addChapterIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateIsActived"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Tạo mới</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Add chapter Modal -->
+    <!-- Edit chapter Modal -->
+    <div class="modal fade" id="editChapterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Chỉnh sửa chapter</h3>
+                    </div>
+                    <form id="editChapterForm" class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editChapterIndex" class="form-label">Chỉ mục</label>
+                            <input type="text" id="editChapterIndex" name="editChapterIndex" class="form-control" placeholder="0" />
+                            <ul class="text-danger validate validateIndex"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editChapterName">Tên chapter</label>
+                            <input type="text" id="editChapterName" name="editChapterName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editChapterTitle">Tiêu đề</label>
+                            <input type="text" id="editChapterTitle" name="editChapterTitle" class="form-control" placeholder="Tiêu đề..." />
+                            <ul class="text-danger validate validateTitle"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editChapterMetaKeyword">Từ khóa tìm kiếm</label>
+                            <textarea role="3" id="editChapterMetaKeyword" name="editChapterMetaKeyword" class="form-control" placeholder="Từ khóa tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaKeyword"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editChapterMetaDescription">Mô tả tìm kiếm</label>
+                            <textarea role="3" id="editChapterMetaDescription" name="editChapterMetaDescription" class="form-control" placeholder="Mô tả tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editChapterView" class="form-label">Lượt xem</label>
+                            <input type="text" id="editChapterView" name="editChapterView" class="form-control" placeholder="0" />
+                            <ul class="text-danger validate validateView"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="editChapterImages">Hình ảnh</label>
+                            <input type="file" id="editChapterImages" name="editChapterImages" class="form-control" accept="image/*" multiple />
+                            <ul class="text-danger validate validateImages"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div id="editChapterImagesPreview">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="editChapterStatus" class="form-label">Tình trạng</label>
+                            <select id="editChapterStatus" name="editChapterStatus" class="selectpicker w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <option value="Full">Đã hoàn thành</option>
+                                <option value="Raw">Một phần</option>
+                            </select>
+                            <ul class="text-danger validate validateStatus"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="editChapterHotFlag">Hot</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="editChapterHotFlag" name="editChapterHotFlag" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateHotFlag"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="editChapterIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="editChapterIsActived" name="editChapterIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateIsActived"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Cập nhật</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Edit chapter Modal -->
+    <!-- /Modal -->
+</div>

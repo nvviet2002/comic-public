@@ -1,0 +1,240 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý truyện";
+    ViewBag.Page = "Story";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <h4 class="mb-4">Danh sách truyện</h4>
+
+    <div class="card">
+        <div class="card-datatable text-nowrap table-responsive">
+            <table id="storyDatatable" class="datatables-ajax table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên</th>
+                        <th>Thể loại</th>
+                        <th>Hình</th>
+                        <th>Lượt xem</th>
+                        <th>Cập nhật lúc</th>
+                        <th>Tạo lúc</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!-- Add story Modal -->
+    <div class="modal fade" id="addStoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Thêm mới truyện</h3>
+                    </div>
+                    <form id="addStoryForm" class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addStoryName">Tên truyện</label>
+                            <input type="text" id="addStoryName" name="addStoryName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addStoryOtherName">Tên khác</label>
+                            <input type="text" id="addStoryOtherName" name="addStoryOtherName" class="form-control" placeholder="Tên khác..." />
+                            <ul class="text-danger validate validateOtherName"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="addStoryDescription">Mô tả</label>
+                            <textarea id="addStoryDescription" name="addStoryDescription" class="form-control"></textarea>
+                            <ul class="text-danger validate validateDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addStoryMetaKeyword">Từ khóa tìm kiếm</label>
+                            <textarea role="3" id="addStoryMetaKeyword" name="addStoryMetaKeyword" class="form-control" placeholder="Từ khóa tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaKeyword"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addStoryMetaDescription">Mô tả tìm kiếm</label>
+                            <textarea role="3" id="addStoryMetaDescription" name="addStoryMetaDescription" class="form-control" placeholder="Mô tả tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addStoryAvatar">Ảnh đại diện</label>
+                            <input type="file" id="addStoryAvatar" name="addStoryAvatar" class="form-control" accept="image/*" />
+                            <ul class="text-danger validate validateAvatar"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <img alt="Ảnh đại diện" id="addStoryAvatarPreview" height="auto" width="40%" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="addStoryCategoryIds" class="form-label">Danh mục</label>
+                            <select id="addStoryCategoryIds" name="addStoryCategoryIds" multiple class="select2 w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                
+                            </select>
+                            <ul class="text-danger validate validateCategoryIds"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="addStoryStatus" class="form-label">Tình trạng</label>
+                            <select id="addStoryStatus" name="addStoryStatus" class="selectpicker w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <option value="New">Mới</option>
+                                <option value="Updating">Đang cập nhật</option>
+                                <option value="Full">Đã hoàn thành</option>
+                            </select>
+                            <ul class="text-danger validate validateStatus"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="addStoryHotFlag">Hot</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="addStoryHotFlag" name="addStoryHotFlag" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateHotFlag"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="addStoryIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="addStoryIsActived" name="addStoryIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateIsActived"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Tạo mới</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Add story Modal -->
+    <!-- Edit story Modal -->
+    <div class="modal fade" id="editStoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Chỉnh sửa truyện</h3>
+                    </div>
+                    <form id="editStoryForm" class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editStoryName">Tên truyện</label>
+                            <input type="text" id="editStoryName" name="editStoryName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editStoryOtherName">Tên khác</label>
+                            <input type="text" id="editStoryOtherName" name="editStoryOtherName" class="form-control" placeholder="Tên khác..." />
+                            <ul class="text-danger validate validateOtherName"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="editStoryDescription">Mô tả</label>
+                            <textarea id="editStoryDescription" name="editStoryDescription" class="form-control"></textarea>
+                            <ul class="text-danger validate validateDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editStoryMetaKeyword">Từ khóa tìm kiếm</label>
+                            <textarea role="3" id="editStoryMetaKeyword" name="editStoryMetaKeyword" class="form-control" placeholder="Từ khóa tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaKeyword"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editStoryMetaDescription">Mô tả tìm kiếm</label>
+                            <textarea role="3" id="editStoryMetaDescription" name="editStoryMetaDescription" class="form-control" placeholder="Mô tả tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editStoryAvatar">Ảnh đại diện</label>
+                            <input type="file" id="editStoryAvatar" name="editStoryAvatar" class="form-control" accept="image/*" />
+                            <ul class="text-danger validate validateAvatar"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <img alt="Ảnh đại diện" id="editStoryAvatarPreview" height="auto" width="40%" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editStoryCategoryIds" class="form-label">Danh mục</label>
+                            <select id="editStoryCategoryIds" name="editStoryCategoryIds" multiple class="select2 w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                            </select>
+                            <ul class="text-danger validate validateCategoryIds"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editStoryStatus" class="form-label">Tình trạng</label>
+                            <select id="editStoryStatus" name="editStoryStatus" class="selectpicker w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <option value="New">Mới</option>
+                                <option value="Updating">Đang cập nhật</option>
+                                <option value="Full">Đã hoàn thành</option>
+                            </select>
+                            <ul class="text-danger validate validateStatus"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="editStoryHotFlag">Hot</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="editStoryHotFlag" name="editStoryHotFlag" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateHotFlag"></ul>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label" for="editStoryIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="editStoryIsActived" name="editStoryIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateIsActived"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Cập nhật</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Edit story Modal -->
+    <!-- /Modal -->
+</div>

@@ -1,0 +1,166 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý danh mục";
+    ViewBag.Page = "Category";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <h4 class="mb-4">Danh sách danh mục</h4>
+
+    <div class="card">
+        <div class="card-datatable text-nowrap table-responsive">
+            <table id="categoryDatatable" class="datatables-ajax table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên</th>
+                        <th>Phân loại</th>
+                        <th>Mô tả</th>
+                        <th>Cập nhật lúc</th>
+                        <th>Tạo lúc</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!-- Add category Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Thêm mới danh mục</h3>
+                    </div>
+                    <form id="addCategoryForm" class="row">
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="addCategoryName">Tên danh mục</label>
+                            <input type="text" id="addCategoryName" name="addCategoryName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="addCategoryDescription">Mô tả</label>
+                            <textarea id="addCategoryDescription" name="addCategoryDescription" class="form-control"></textarea>
+                            <ul class="text-danger validate validateDescription"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="addCategoryMetaKeyword">Từ khóa tìm kiếm</label>
+                            <textarea role="3" id="addCategoryMetaKeyword" name="addCategoryMetaKeyword" class="form-control" placeholder="Từ khóa tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaKeyword"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="addCategoryMetaDescription">Mô tả tìm kiếm</label>
+                            <textarea role="3" id="addCategoryMetaDescription" name="addCategoryMetaDescription" class="form-control" placeholder="Mô tả tìm kiếm..." ></textarea>
+                            <ul class="text-danger validate validateMetaDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="addCategoryType" class="form-label">Phân loại</label>
+                            <select id="addCategoryType" name="addCategoryType" class="selectpicker w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <option value="Category">Danh mục</option>
+                                <option value="Author">Tác giả</option>
+                                <option value="Sex">Giới tính</option>
+                            </select>
+                            <ul class="text-danger validate validateType"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addCategoryIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="addCategoryIsActived" name="addCategoryIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateIsActived"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Tạo mới</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Add category Modal -->
+    <!-- Edit category Modal -->
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Chỉnh sửa danh mục</h3>
+                    </div>
+                    <form id="editCategoryForm" class="row">
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="editCategoryName">Tên danh mục</label>
+                            <input type="text" id="editCategoryName" name="editCategoryName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="editCategoryDescription">Mô tả</label>
+                            <textarea id="editCategoryDescription" name="editCategoryDescription" class="form-control"></textarea>
+                            <ul class="text-danger validate validateDescription"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="editCategoryMetaKeyword">Từ khóa tìm kiếm</label>
+                            <textarea role="3" id="editCategoryMetaKeyword" name="editCategoryMetaKeyword" class="form-control" placeholder="Từ khóa tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaKeyword"></ul>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label" for="editCategoryMetaDescription">Mô tả tìm kiếm</label>
+                            <textarea role="3" id="editCategoryMetaDescription" name="editCategoryMetaDescription" class="form-control" placeholder="Mô tả tìm kiếm..."></textarea>
+                            <ul class="text-danger validate validateMetaDescription"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editCategoryType" class="form-label">Phân loại</label>
+                            <select id="editCategoryType" name="editCategoryType" class="selectpicker w-100" data-style="btn-default" data-icon-base="ti" data-tick-icon="ti-check text-white">
+                                <option value="Category">Danh mục</option>
+                                <option value="Author">Tác giả</option>
+                                <option value="Sex">Giới tính</option>
+                            </select>
+                            <ul class="text-danger validate validateType"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editCategoryIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="editCategoryIsActived" name="editCategoryIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateIsActived"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Cập nhật</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Edit category Modal -->
+    <!-- /Modal -->
+</div>

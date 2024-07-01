@@ -1,0 +1,137 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Comic.WebClient.ApiClient.Client
+@using Comic.Domain.Enums
+@inject ICategoryApiClient _categoryApiClient
+
+@{
+    var categories = await _categoryApiClient.GetActivedAllAsync();
+
+}
+
+
+<nav class="nav d-none d-md-block">
+    <div class="container-xl wide header-nav">
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a asp-area="Client" asp-controller="Home" asp-action="Index" class="nav-item-link">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="" class="nav-item-link">HOT</a>
+            </li>
+            <li class="nav-item">
+                <a href="" class="nav-item-link" onclick="alert('Bạn chưa đăng nhập');">THEO DÕI</a>
+            </li>
+            <li class="nav-item">
+                <a href="" class="nav-item-link">LỊCH SỬ</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="" class="nav-item-link dropdown-toggle">
+                    THỂ LOẠI
+                </a>
+                <div class="dropdown-menu nav-megamenu bg-white rounded-3 border-1">
+                    <div class="row px-4 w-100 fs-15">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort=""
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-3 fs-15 p-2 nav-category-item active" data-desc="Tất cả thể loại truyện tranh">
+                            Tất cả
+                        </a>
+                        @foreach (var category in categories)
+                        {
+                            <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                               asp-route-status="" asp-route-sort=""
+                               asp-route-slug="@category.Slug" asp-route-id="@category.Id"
+                               class="col-3 fs-15 p-2 nav-category-item" data-desc="@category.Description">
+                                @category.Name
+                            </a>
+                        }
+                        <div class="py-2 fs-14 fst-italic border-top border-secondary" id="navCategoryDescription">
+
+                        </div>
+                    </div>
+                    
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="" class="nav-item-link dropdown-toggle">
+                    XẾP HẠNG
+                </a>
+                <div class="dropdown-menu nav-litlemenu bg-white rounded-3 border-1">
+                    <div class="row px-4 w-100 fs-15">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                            asp-route-status="" asp-route-sort="@SortOption.TopAll"
+                            asp-route-slug="tat-ca" asp-route-id=""
+                            class="col-6 fs-15 p-2">
+                            <i class="fa fa-eye fw-600"></i></i>&nbspTop all
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="@StoryStatus.Full" asp-route-sort=""
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2 active">
+                            <i class="fa fa-signal fw-600 text-danger"></i>&nbspTruyện full
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort="@SortOption.TopMonth"
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-eye fw-600"></i>&nbspTop tháng
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort="@SortOption.UpdatedAt"
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-refresh fw-600"></i>&nbspMới cập nhật
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort="@SortOption.TopWeek"
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-eye fw-600"></i>&nbspTop tuần
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="@StoryStatus.New" asp-route-sort=""
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-cloud-upload fw-600"></i>&nbspTruyện mới
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort="@SortOption.TopDay"
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-eye fw-600"></i>&nbspTop ngày
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort="@SortOption.Chapter"
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-list fw-600"></i>&nbspSố chapter
+                        </a>
+                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                           asp-route-status="" asp-route-sort="@SortOption.TopMonth"
+                           asp-route-slug="tat-ca" asp-route-id=""
+                           class="col-6 fs-15 p-2">
+                            <i class="fa fa-eye fw-600"></i>&nbspTop follow
+                        </a>
+                    </div>
+
+                </div>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                asp-route-slug="tat-ca" asp-route-id="" class="nav-item-link">TÌM TRUYỆN</a>
+            </li>
+            <li class="nav-item">
+                <a href="" class="nav-item-link">
+                    GROUP
+                    <span class="spinner-grow text-danger"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="" class="nav-item-link">FANPAGE</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+

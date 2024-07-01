@@ -1,0 +1,20 @@
+﻿<!-- Vendors JS -->
+<script src="~/client/vendor/js/jquery.min.js"></script>
+<script src="~/client/vendor/js/bootstrap.min.js"></script>
+<script src="~/client/vendor/js/owl.carousel.min.js"></script>
+
+<!-- Main JS -->
+<script src="~/client/js/core.js"></script>
+<script src="~/client/js/main.js"></script>
+
+@{
+    if (ViewBag.Page == "StoryDetail")
+    {
+        <script src="~/client/custom/js/story-detail.js"></script>
+    }
+    else if (ViewBag.Page == "ChapterDetail")
+    {
+        <script src="~/client/custom/js/chapter-detail.js"></script>
+    }
+}
+

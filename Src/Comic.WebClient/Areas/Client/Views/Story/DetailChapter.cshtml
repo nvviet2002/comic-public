@@ -1,0 +1,269 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Comic.Domain.ResponseModels.PaginateModel
+@using Comic.Domain.ResponseModels.StoryModel
+@using Comic.Domain.ResponseModels.ChapterModel
+@using Comic.Domain.Enums
+@using Comic.WebClient.Common
+@{
+    Layout = "_ClientLayout";
+    
+    ViewBag.Page = "ChapterDetail";
+
+    var chapter = ViewBag.Chapter as ChapterRes;
+    var story = ViewBag.Story as StoryRes;
+
+    ViewBag.Title = $"{story.Name} | {chapter.Name}";
+
+}
+<div class="content">
+    <div class="container-xl wide bg-light">
+        <div id="breadcrumb" class="py-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="Client" asp-controller="Home" asp-action="Index">
+                        Trang chủ
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                       asp-route-slug="@story.Slug" asp-route-id="@story.Id">
+                        @story.Name
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a>
+                        @chapter.Name
+                    </a>
+                </li>
+            </ol>
+
+        </div>
+        <div id="main" class="row">
+            <div class="col-12">
+                <div class="p-2">
+                    <h1 class="w-100">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                           asp-route-slug="@story.Slug" asp-route-id="@story.Id">@story.Name</a>
+                           - @chapter.Name
+                        <span class="fs-15 fw-light fst-italic time">
+                            [ Cập nhật lúc: @RazorHelper.UtcToComicString(chapter.UpdatedAt) ]
+                        </span>
+                    </h1>
+                </div>
+                <div class="text-center">
+                    <p>
+                        <span class="spinner-grow text-danger"></span>
+                        Nếu không xem được truyện vui lòng đổi "<span class="detail-item-more">SERVER ẢNH</span>" bên dưới
+                    </p>
+                    <div>
+                        <button class="btn btn-success px-3 m-2 rounded-3 fs-16">Server 1</button>
+                        <button class="btn btn-primary px-3 m-2 rounded-3 fs-16">Server 2</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-warning px-3 m-2 rounded-3 fs-16 text-white">
+                            <i class="fa fa-exclamation-triangle text-white"></i>&nbspBáo lỗi
+                        </button>
+                    </div>
+                </div>
+                <div class="p-5 alert alert-info text-center">
+                    <i class="fa fa-info-circle text-primary"></i>&nbspSử dụng mũi tên trái (<--) phải (-->) để chuyển chapter
+                </div>
+                <div class="p-3 d-flex justify-content-center">
+                    <a asp-area="Client" asp-controller="Home" asp-action="Index"
+                        class="px-3 fs-1"><i class="fa fa-home text-danger"></i></a>
+                    <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                       asp-route-slug="@story.Slug" asp-route-id="@story.Id" 
+                       class="px-3 fs-1"><i class="fa fa-list text-danger"></i></a>
+                    @* <a class="px-3 fs-1"><i class="fa fa-undo text-danger"></i></a> *@
+                    @{
+                        //caculate previous and next chapter
+                        var chapterList = story.Chapters.ToList();
+                        var currentChapter = chapterList.FirstOrDefault(q => q.Id == chapter.Id);
+                        var previousChapterIndex = chapterList.IndexOf(currentChapter) + 1;
+                        var nextChapterIndex = chapterList.IndexOf(currentChapter) - 1;
+                    }
+                    @if(previousChapterIndex < chapterList.Count)
+                    {
+                        <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                           asp-route-storySlug="@story.Slug" 
+                           asp-route-chapterSlug="@chapterList[previousChapterIndex].Slug"
+                           asp-route-id="@chapterList[previousChapterIndex].Id"
+                            class="btn btn-danger py-0 px-3 mx-2 bg-danger-light rounded-start fs-1">
+                            <i class="fa fa-chevron-left text-white"></i></a>
+                    }else{
+                        <a href="#" class="btn btn-danger py-0 px-3 mx-2 bg-danger-light rounded-start fs-1 disabled">
+                            <i class="fa fa-chevron-left text-white"></i>
+                        </a>
+                    }
+                    <select class="px-2" id="chapterSelector">
+                        @foreach(var storyChapter in story.Chapters)
+                        {
+                            @if(storyChapter.Id == chapter.Id)
+                            {
+                                <option selected value="@Url.Action("DetailChapter", "Story",
+                                new {
+                                    storySlug = story.Slug,
+                                    chapterSlug = storyChapter.Slug ,
+                                    id = storyChapter.Id } )">
+                                    @storyChapter.Name
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="@Url.Action("DetailChapter", "Story",
+                                new {
+                                    storySlug = story.Slug,
+                                    chapterSlug = storyChapter.Slug ,
+                                    id = storyChapter.Id } )">
+                                    @storyChapter.Name
+                                </option>
+                            }
+
+                        }
+                    </select>
+                    @if (nextChapterIndex >= 0)
+                    {
+                        <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                           asp-route-storySlug="@story.Slug"
+                           asp-route-chapterSlug="@chapterList[nextChapterIndex].Slug"
+                           asp-route-id="@chapterList[nextChapterIndex].Id"
+                           class="btn btn-danger py-0 px-3 mx-2 bg-danger-light rounded-start fs-1">
+                            <i class="fa fa-chevron-right text-white"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="#" class="btn btn-danger py-0 px-3 mx-2 bg-danger-light rounded-start fs-1 disabled">
+                            <i class="fa fa-chevron-right text-white"></i>
+                        </a>
+                    }
+                    <button type="button" class="btn btn-danger bg-danger-light fs-16 px-3 mx-2 rounded-3"
+                         onclick="alert('Tính năng đang được phát triển!');"   >
+                        <i class="fa fa-heart text-white fw-600"></i><span class="d-none d-md-inline text-white">&nbspTheo dõi</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-12">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+                        crossorigin="anonymous"></script>
+                <!-- Đầu trang truyện -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7148649227764135"
+                     data-ad-slot="5290249185"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+                        crossorigin="anonymous"></script>
+                <!-- Đầu trang truyện -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7148649227764135"
+                     data-ad-slot="5290249185"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            <div class="d-none d-md-block col-1 bg-gray"></div>
+            
+            <div class="col-12 g-0 col-md-10">
+
+                @foreach (var image in @chapter.Images)
+                {
+                    <img src="@image" alt="@chapter.Name" width="100%" height="auto" />
+                }
+            </div>
+            <div class="d-none d-md-block col-1 bg-gray"></div>
+            <div class="d-flex justify-content-center p-3">
+                @if (previousChapterIndex < chapterList.Count)
+                {
+                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                            asp-route-storySlug="@story.Slug"
+                            asp-route-chapterSlug="@chapterList[previousChapterIndex].Slug"
+                            asp-route-id="@chapterList[previousChapterIndex].Id"
+                            class="btn btn-danger bg-danger-light fs-16 py-2 px-3 mx-2 rounded-pill">
+                        <i class="fa fa-chevron-left text-white fw-600 fs-2"></i>&nbspChap trước
+                    </a>
+                }
+                else
+                {
+                    <a href="#" class="btn btn-danger bg-danger-light fs-16 py-2 px-3 mx-2 rounded-pill disabled">
+                        <i class="fa fa-chevron-left text-white fw-600 fs-2"></i>&nbspChap trước
+                    </a>
+                }
+                @if (nextChapterIndex >= 0)
+                {
+                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                       asp-route-storySlug="@story.Slug"
+                       asp-route-chapterSlug="@chapterList[nextChapterIndex].Slug"
+                       asp-route-id="@chapterList[nextChapterIndex].Id"
+                       class="btn btn-danger bg-danger-light fs-16 py-2 px-3 mx-2 rounded-pill">
+                        &nbspChap sau<i class="fa fa-chevron-right text-white fw-600 fs-2"></i>
+                    </a>
+                }
+                else
+                {
+                    <a href="#" class="btn btn-danger bg-danger-light fs-16 py-2 px-3 mx-2 rounded-pill disabled">
+                        &nbspChap sau<i class="fa fa-chevron-right text-white fw-600 fs-2"></i>
+                    </a>
+                }
+
+            </div>
+            <div class="second-tab">
+                <div class="nav nav-tabs main-tab-menu">
+                    <a class="main-tab-link active"
+                       data-bs-toggle="tab"
+                       href="#tab-comment"
+                       title="BXH truyện tranh theo tháng">Bình luận</a>
+                    <a class="main-tab-link"
+                       data-bs-toggle="tab"
+                       href="#tab-comment-facebook"
+                       title="BXH truyện tranh theo tuần">Facebook</a>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-comment">
+                    </div>
+                    <div class="tab-pane fade" id="tab-comment-facebook">
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-12">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+                        crossorigin="anonymous"></script>
+                <!-- Đầu trang truyện -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7148649227764135"
+                     data-ad-slot="5290249185"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+                        crossorigin="anonymous"></script>
+                <!-- Đầu trang truyện -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7148649227764135"
+                     data-ad-slot="5290249185"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+           
+        </div>
+
+
+    </div>
+</div>

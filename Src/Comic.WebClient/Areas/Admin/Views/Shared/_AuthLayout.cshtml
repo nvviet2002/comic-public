@@ -1,0 +1,22 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<!-- beautify ignore:start -->
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact " dir="ltr" data-theme="theme-semi-dark" data-assets-path="~/admin/" data-template="vertical-menu-template-semi-dark">
+
+@{
+    await Html.RenderPartialAsync("_PartialHead");
+}
+
+<body>
+
+    @RenderBody()
+    @{
+        await Html.RenderPartialAsync("_PartialImportJs");
+    }
+</body>
+
+
+</html>
+
+<!-- beautify ignore:end -->

@@ -1,0 +1,285 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Comic.Domain.ResponseModels.PaginateModel
+@using Comic.Domain.ResponseModels.StoryModel
+@using Comic.Domain.Enums
+@using Comic.WebClient.Common
+@{
+    Layout = "_ClientLayout";
+    
+    ViewBag.Page = "StoryDetail";
+
+    var story = ViewBag.Story as StoryRes;
+
+    ViewBag.Title = $"{story.Name} | TruyenVV";
+
+}
+<div class="content">
+    <div class="container-xl wide bg-light">
+        <div id="breadcrumb" class="py-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="Client" asp-controller="Home" asp-action="Index">
+                        Trang chủ
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a>
+                        @story.Name
+                    </a>
+                </li>
+            </ol>
+
+        </div>
+        <div id="main" class="row">
+            <div class="col-12 col-lg-8">
+                <div class="p-2">
+                    <h1 class="w-100 text-center">@story.Name</h1>
+                    <p class="w-100 text-center time">
+                        @{
+                            var lastChapter = story.Chapters.FirstOrDefault();
+                            @if(lastChapter == null)
+                            {
+                                <i>Cập nhật lúc: @RazorHelper.UtcToComicString(story.UpdatedAt)</i>
+                            }
+                            else
+                            {
+                                <i>Cập nhật lúc: @RazorHelper.UtcToComicString(lastChapter.UpdatedAt)</i>
+                            }
+                        }
+                        
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-4 pb-3">
+                        <div class="main-card-image">
+                            <img src="@story.Avatar" alt="@story.Name" class="center" />
+                            <span class="icon-hot"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 pb-2">
+                        <div class="row">
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-plus fw-600"></i>&nbspTên khác</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                @if (!string.IsNullOrEmpty(story.OtherName))
+                                {
+                                    <p>@story.OtherName</p>
+                                }else{
+                                    <p>Đang cập nhật</p>
+                                }
+                            </div>
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-user fw-600"></i>&nbspTác giả</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                @{
+                                    var author = story.Categories
+                                        .FirstOrDefault(q => q.Type == CategoryType.Author);
+                                    if (author != null)
+                                    {
+                                        <p>@author.Name</p>
+                                    }else{
+                                        <p>Đang cập nhật</p>
+                                    }
+                                }
+                            </div>
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-rss fw-600"></i>&nbspTình trạng</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                @{
+                                    if (story.Status == Comic.Domain.Enums.StoryStatus.New)
+                                    {
+                                        <p>Truyện mới</p>
+                                    }
+                                    else if (story.Status == Comic.Domain.Enums.StoryStatus.Updating)
+                                    {
+                                        <p>Đang cập nhật</p>
+                                    }
+                                    else if (story.Status == Comic.Domain.Enums.StoryStatus.Full)
+                                    {
+                                        <p>Đã hoàn thành</p>
+                                    }
+                                }
+                            </div>
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-eye fw-600"></i>&nbspLượt xem</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                <p>@story.View</p>
+                            </div>
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-heart fw-600"></i>&nbspLượt theo dõi</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                <p>@story.Follow</p>
+                            </div>
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-tags fw-600"></i>&nbspThể loại</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                @{
+                                    var storyCategories = story.Categories
+                                    .Where(q => q.Type == CategoryType.Category);
+                                    foreach (var cate in storyCategories)
+                                    {
+                                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                           asp-route-status="" asp-route-sort=""
+                                           asp-route-slug="@cate.Slug" asp-route-id="@cate.Id"
+                                           class="btn btn-outline-danger text-center fs-15 rounded-3">@cate.Name</a>
+                                    }
+                                }
+                            </div>
+                            <div class="col-4 p-2">
+                                <p><i class="fa fa-ranking-star fw-600"></i>&nbspXếp hạng</p>
+                            </div>
+                            <div class="col-8 p-2">
+                                <p>
+                                    @story.Rate / 5<i class="fa-solid fa-star fw-600 text-warning"></i>
+                                    - @story.RateTotal lượt đánh giá
+                                </p>
+                            </div>
+                            <div class="col-12 p-2">
+                                @{
+                                    var firstChapter = story.Chapters.LastOrDefault();
+                                }
+                                @if(firstChapter != null)
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                       asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@firstChapter.Slug"
+                                       asp-route-id="@firstChapter.Id" class="btn btn-success bg-success-light fs-16 p-3 m-2 rounded-pill">
+                                        <i class="fa fa-book text-white fw-600"></i>&nbspĐọc từ đầu
+                                    </a>
+                                }else{
+                                    <a href="#" class="btn btn-success bg-success-light fs-16 p-3 m-2 rounded-pill"
+                                        onclick="alert('Truyện tạm thời chưa cập nhật chapter mới!');">
+                                        <i class="fa fa-book text-white fw-600"></i>&nbspĐọc từ đầu
+                                    </a>
+                                }
+                                
+                                <button type="button" class="btn btn-danger bg-danger-light fs-16 p-3 m-2 rounded-pill"
+                                    onclick="alert('Tính năng đang được phát triển!');">
+                                    <i class="fa fa-heart text-white fw-600"></i>&nbspTheo dõi
+                                </button>
+                                @* <button type="button" class="btn btn-primary bg-primary-light fs-16 p-3 m-2 rounded-3">
+                                    <i class="fa fa-location-arrow text-white fw-600"></i>&nbspĐọc tiếp
+                                </button> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="detail-item-title">
+                        <i class="fa fa-file-lines icon"></i>&nbspNỘI DUNG TRUYỆN
+                    </h2>
+                    <div id="storyDescription" class="detail-item-desc shorted  px-2">
+                        @Html.Raw(story.Description)
+                    </div>
+                    <a href="#" id="storyMoreDescription" class="px-2 py-0 fs-14 detail-item-more">Xem thêm ></a>
+                    
+                </div>
+                <div>
+                    <h2 class="detail-item-title">
+                        <i class="fa fa-list icon"></i>&nbspDANH SÁCH CHƯƠNG
+                    </h2>
+                    <div class="row">
+                        <div class="col-6 fs-17">
+                            Số chương
+                        </div>
+                        <div class="col-6 fs-17">
+                            Cập nhật
+                        </div>
+                    </div>
+                    <div>
+                        <ul id="storyChapters" class="detail-item-chapters p-3 shorted position-relative">
+                            @foreach(var chapter in story.Chapters)
+                            {
+                                <li class="row chapter py-2">
+                                    <div class="col-6">
+                                        <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                           asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@chapter.Slug"
+                                           asp-route-id="@chapter.Id" >@chapter.Name</a>
+                                    </div>
+                                    <div class="col-6 fs-14 fw-light fst-italic time">
+                                        @RazorHelper.UtcToComicString(chapter.UpdatedAt)
+                                    </div>
+                                </li>
+                            }
+                            <a href="#" id="storyMoreChapter" 
+                                class="fs-14 form-control p-2 w-100 text-center detail-item-more position-absolute bottom-0">
+                                <i class="fa-solid fa-plus icon"></i>&nbspXem thêm
+                            </a>
+                        </ul>
+                        
+                    </div>
+                   
+                </div>
+
+                <div class="second-tab">
+                    <div class="nav nav-tabs main-tab-menu">
+                        <a class="main-tab-link active"
+                           data-bs-toggle="tab"
+                           href="#tab-comment"
+                           title="BXH truyện tranh theo tháng">Bình luận(@story.Comment)</a>
+                        <a class="main-tab-link"
+                           data-bs-toggle="tab"
+                           href="#tab-comment-facebook"
+                           title="BXH truyện tranh theo tuần">Facebook</a>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab-comment">
+
+                        </div>
+                        <div class="tab-pane fade" id="tab-comment-facebook">
+                            
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+
+            <div class="d-none d-lg-block col-lg-4">
+                <!-- tab -->
+                @{
+                    await Html.RenderPartialAsync("_PartialSideBar");
+                }
+                <!-- tab -->
+            </div>
+
+            <div class="col-12">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+                        crossorigin="anonymous"></script>
+                <!-- Đầu trang truyện -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7148649227764135"
+                     data-ad-slot="5290249185"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+                        crossorigin="anonymous"></script>
+                <!-- Đầu trang truyện -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-7148649227764135"
+                     data-ad-slot="5290249185"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+
+       
+    </div>
+</div>

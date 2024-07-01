@@ -1,0 +1,48 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+
+@{
+    await Html.RenderPartialAsync("_PartialHead");
+}
+<body>
+
+    <!-- header -->
+    @{
+        await Html.RenderPartialAsync("_PartialHeader");
+    }
+    <!-- header -->
+    <!-- nav -->
+    @{
+        await Html.RenderPartialAsync("_PartialNavBar");
+    }
+    <!-- nav -->
+    <div>
+        <div class="container-xl wide header-nav">
+            <!-- notify -->
+            <div class="notify">
+                <div class="notify-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <p class="notify-error">
+                    Hiện tại có rất nhiều website giả mạo, các bạn không truy cập để
+                    tránh bị hack tài khoản và dính virus
+                </p>
+            </div>
+            <!-- notify -->
+        </div>
+    </div>
+
+
+    <!-- content -->
+    @RenderBody()
+    <!-- content -->
+
+    @{
+        await Html.RenderPartialAsync("_PartialFooter");
+        await Html.RenderPartialAsync("_PartialImportJs");
+    }
+</body>
+</html>
+
+

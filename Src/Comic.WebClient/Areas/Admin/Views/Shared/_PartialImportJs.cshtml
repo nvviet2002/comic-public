@@ -1,0 +1,92 @@
+﻿<!-- Helpers -->
+<script src="~/admin/vendor/js/helpers.js"></script>
+<script src="~/admin/js/config.js"></script>
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+
+<script src="~/admin/vendor/libs/jquery/jquery.js"></script>
+<script src="~/admin/vendor/libs/popper/popper.js"></script>
+<script src="~/admin/vendor/js/bootstrap.js"></script>
+<script src="~/admin/vendor/libs/node-waves/node-waves.js"></script>
+<script src="~/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="~/admin/vendor/libs/hammer/hammer.js"></script>
+<script src="~/admin/vendor/libs/i18n/i18n.js"></script>
+<script src="~/admin/vendor/libs/typeahead-js/typeahead.js"></script>
+<script src="~/admin/vendor/js/menu.js"></script>
+
+<!-- endbuild -->
+<!-- Vendors JS -->
+<script src="~/admin/vendor/libs/apex-charts/apexcharts.js"></script>
+<script src="~/admin/vendor/libs/swiper/swiper.js"></script>
+<script src="~/admin/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+<script src="~/admin/vendor/libs/toastr/toastr.js"></script>
+<script src="~/admin/vendor/libs/block-ui/block-ui.js"></script>
+<script src="~/admin/vendor/libs/sweetalert2/sweetalert2.js"></script>
+
+<script src="~/admin/vendor/libs/moment/moment.js"></script>
+<script src="~/admin/vendor/libs/select2/select2.js"></script>
+<script src="~/admin/vendor/libs/%40form-validation/popular.js"></script>
+<script src="~/admin/vendor/libs/%40form-validation/bootstrap5.js"></script>
+<script src="~/admin/vendor/libs/%40form-validation/auto-focus.js"></script>
+<script src="~/admin/vendor/libs/cleavejs/cleave.js"></script>
+<script src="~/admin/vendor/libs/cleavejs/cleave-phone.js"></script>
+<script src="~/admin/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+<script src="~/admin/vendor/libs/flatpickr/flatpickr.js"></script>
+<script src="~/admin/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+<script src="~/admin/vendor/libs/typeahead-js/typeahead.js"></script>
+<script src="~/admin/vendor/libs/dropzone/dropzone.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
+@* <script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/super-build/ckeditor.js"></script> *@
+<!-- Main JS -->
+<script src="~/admin/js/main.js"></script>
+
+
+<!-- Page JS -->
+<script src="~/admin/js/pages-auth.js"></script>
+<script src="~/admin/js/dashboards-analytics.js"></script>
+<script src="~/admin/js/extended-ui-blockui.js"></script>
+<script src="~/admin/js/forms-selects.js"></script>
+
+<script src="~/admin/custom/js/core.js"></script>
+
+<!-- Customs JS-->
+@if(ViewBag.CustomJs == "Auth"){
+    <script src="~/admin/custom/js/auth.js"></script>
+}else{
+    <script src="~/admin/custom/js/layout.js"></script>
+}
+
+@{
+    if (ViewBag.Page == "Dashboard")
+    {
+        <script src="~/admin/custom/js/dashboard.js"></script>
+    }
+    else if (ViewBag.Page == "Role")
+    {
+        <script src="~/admin/custom/js/role.js"></script>
+    }
+    else if (ViewBag.Page == "Permission")
+    {
+        <script src="~/admin/custom/js/permission.js"></script>
+    }
+    else if (ViewBag.Page == "User")
+    {
+        <script src="~/admin/custom/js/user.js"></script>
+    }
+    else if (ViewBag.Page == "Category")
+    {
+        <script src="~/admin/custom/js/category.js"></script>
+    }
+    else if (ViewBag.Page == "Story")
+    {
+        <script src="~/admin/custom/js/story.js"></script>
+    }
+    else if (ViewBag.Page == "Chapter")
+    {
+        <script src="~/admin/custom/js/chapter.js"></script>
+    }
+    else if (ViewBag.Page == "Seo")
+    {
+        <script src="~/admin/custom/js/seo.js"></script>
+    }
+}

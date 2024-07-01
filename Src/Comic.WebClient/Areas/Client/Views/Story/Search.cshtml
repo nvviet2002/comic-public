@@ -1,0 +1,561 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Comic.Domain.ResponseModels.PaginateModel
+@using Comic.Domain.ResponseModels.StoryModel
+@using Comic.Domain.Entities
+@using Comic.Domain.Enums
+@using Comic.WebClient.Common
+@{
+    Layout = "_ClientLayout";
+    ViewBag.Title = "TruyenVV - Tìm kiếm truyện nhanh chóng";
+    ViewBag.Page = "Search";
+
+    var categoryId = ViewBag.CategoryId as string;
+    var categorySlug = ViewBag.categorySlug as string;
+    var storyStatus = ViewBag.StoryStatus as StoryStatus?;
+    var storySort = ViewBag.StorySort as SortOption?;
+    var categories = ViewBag.Categories as ICollection<Category>;
+    var paginatedStories = ViewBag.PaginatedStories as PaginateRes<StoryRes>;
+
+}
+<div class="content">
+    <div class="container-xl wide bg-light">
+        <div id="breadcrumb" class="py-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="Client" asp-controller="Home" asp-action="Index">
+                        Trang chủ
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a>
+                        Tìm kiếm
+                    </a>
+                </li>
+            </ol>
+
+        </div>
+        <div id="main" class="row">
+            <div class="col-12 col-md-8">
+                <div class="p-2">
+                   <h1 class="fs-20 text-center w-100">Tìm truyện tranh online - Mới cập nhật</h1>
+                    <h2 class="w-100 p-3 border border-1 text-center">Tất cả thể loại truyện tranh</h2>
+                   <div class="row p-2">
+                        <div class="col-12 col-md-3"></div>
+                        <div class="col-12 col-md-9 row">
+                            <div class="col-4 col-md-3 p-2">
+                                @if (storyStatus == null)
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3 active">
+                                        Tất cả
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3">
+                                        Tất cả
+                                    </a>
+                                }
+                            </div>
+                            <div class="col-4 col-md-3 p-2">
+                                @if (storyStatus == StoryStatus.New)
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@StoryStatus.New" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3 active">
+                                        Truyện mới
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@StoryStatus.New" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3">
+                                        Truyện mới
+                                    </a>
+                                }
+                            </div>
+                            <div class="col-4 col-md-3 p-2">
+                                @if (storyStatus == StoryStatus.Updating)
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@StoryStatus.Updating" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3 active">
+                                        Đang tiến hành
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@StoryStatus.Updating" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3">
+                                        Đang tiến hành
+                                    </a>
+                                }
+                            </div>
+                            <div class="col-4 col-md-3 p-2">
+                                @if (storyStatus == StoryStatus.Full)
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@StoryStatus.Full" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3 active">
+                                        Hoàn thành
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@StoryStatus.Full" asp-route-sort="@storySort"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-primary px-0 w-100 text-center fs-15 rounded-3">
+                                        Hoàn thành
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                   </div>
+                   <div class="row p-2">
+                        <div class="col-12 col-md-3">Sắp xếp theo</div>
+                        <div class="col-12 col-md-9 row">
+                            @if(storySort == SortOption.UpdatedAt)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.UpdatedAt"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId" asp-route-page=""
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Ngày cập nhật
+                                    </a>
+                                </div>
+                               
+                            }else{
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.UpdatedAt"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Ngày cập nhật
+                                    </a>
+                                </div>
+                               
+                            }
+                            @if (storySort == SortOption.TopAll)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopAll"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Top all
+                                    </a>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopAll"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Top all
+                                    </a>
+                                </div>
+                            }
+                            @if (storySort == SortOption.TopMonth)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopMonth"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Top tháng
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopMonth"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Top tháng
+                                    </a>
+                                </div>
+                                
+                            }
+                            @if (storySort == SortOption.TopWeek)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopWeek"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Top tuần
+                                    </a>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopWeek"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Top tuần
+                                    </a>
+                                </div>
+                                
+                            }
+                            @if (storySort == SortOption.TopDay)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopDay"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Top ngày
+                                    </a>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.TopDay"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Top ngày
+                                    </a>
+                                </div>
+                                
+                            }
+                           
+                            @if (storySort == SortOption.Follow)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.Follow"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Theo dõi
+                                    </a>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.Follow"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Theo dõi
+                                    </a>
+                                </div>
+                                
+                            }
+                            @if (storySort == SortOption.Comment)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.Comment"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Bình luận
+                                    </a>
+                                </div>
+                               
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.Comment"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Bình luận
+                                    </a>
+                                </div>
+                               
+                            }
+                            @if (storySort == SortOption.Chapter)
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.Chapter"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100 active">
+                                        Số chapter
+                                    </a>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="col-4 col-md-3 p-2">
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@SortOption.Chapter"
+                                       asp-route-slug="@categorySlug" asp-route-id="@categoryId"
+                                       class="btn btn-outline-warning fs-15 px-2 rounded-3 w-100">
+                                        Số chapter
+                                    </a>
+                                </div>
+                                
+                            }
+                        </div>
+                   </div>
+               </div>
+                @if(paginatedStories.Items.Count() <= 0 || paginatedStories.Items == null)
+                {
+                    <h2 class="p-3 w-100 text-center">Không tìm thấy truyện</h2>
+                }
+                else
+                {
+                    <div class="main-cards row">
+                        @foreach (var story in paginatedStories.Items)
+                        {
+
+                            <!-- a card -->
+                            <div class="col-6 col-sm-4 col-md-3 px-2 py-3">
+                                <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                                   asp-route-slug="@story.Slug" asp-route-id="@story.Id">
+                                    <div class="main-card-image">
+                                        <img src="@story.Avatar" alt="@story.Name" class="center" />
+                                        <div class="main-card-overlay">
+                                            <i class="fa-solid fa-eye"></i>
+                                            @story.View
+                                            <i class="fa-solid fa-comment"></i>
+                                            @story.Comment
+                                            <i class="fa-solid fa-heart"></i>
+                                            @story.Follow
+                                        </div>
+                                        @if (story.HotFlag)
+                                        {
+                                            <span class="icon-hot"></span>
+                                        }
+                                    </div>
+                                </a>
+                                <div class="main-card-info">
+
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                                       asp-route-slug="@story.Slug" asp-route-id="@story.Id"
+                                       class="main-card-title">@story.Name</a>
+                                    <div class="main-card-chapters">
+                                        @foreach (var chapter in story.Chapters)
+                                        {
+                                            <div class="main-card-chapter">
+                                                <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                                   asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@chapter.Slug"
+                                                   asp-route-id="@chapter.Id" class="fs-14">@chapter.Name</a>
+                                                <span class="fs-13">@RazorHelper.UtcToComicString(chapter.UpdatedAt)</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- a card -->
+                        }
+                    </div>
+
+                    <!-- a pagination -->
+                    <div class="d-flex justify-content-center w-100">
+                        <ul class="pagination">
+                            @if (paginatedStories.PagePrevious == paginatedStories.PageNumber)
+                            {
+                                <li class="page-item disabled text-muted">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="1">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled text-muted">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="@paginatedStories.PagePrevious">
+                                        <span>&lt;</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="1">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="@paginatedStories.PagePrevious">
+                                        <span>&lt;</span>
+                                    </a>
+                                </li>
+                            }
+                            @{
+                                //caculate start page to end page
+                                int maxPage = 5;
+                                int startPage, endPage;
+                                if (paginatedStories.TotalPages <= maxPage)
+                                {
+                                    startPage = 1;
+                                    endPage = paginatedStories.TotalPages;
+                                }
+                                else
+                                {
+                                    int rangePage = (int)Math.Floor((decimal)maxPage / 2);
+                                    if (paginatedStories.PageNumber - rangePage <= 0)
+                                    {
+                                        startPage = 1;
+                                    }
+                                    else
+                                    {
+                                        startPage = paginatedStories.PageNumber - rangePage;
+                                    }
+
+                                    if (paginatedStories.PageNumber + rangePage > paginatedStories.TotalPages)
+                                    {
+                                        endPage = paginatedStories.TotalPages;
+                                    }
+                                    else
+                                    {
+                                        endPage = paginatedStories.PageNumber + rangePage;
+                                    }
+                                    //scale to maxpage
+                                    if (endPage - startPage < maxPage)
+                                    {
+                                        if (paginatedStories.PageNumber <= rangePage)
+                                        {
+                                            endPage += rangePage - (paginatedStories.PageNumber - 1);
+                                        }
+                                        if (paginatedStories.PageNumber > paginatedStories.TotalPages - rangePage)
+                                        {
+                                            startPage -= rangePage - (paginatedStories.TotalPages - paginatedStories.PageNumber);
+                                        }
+                                    }
+
+                                }
+                            }
+                            @for (int i = startPage; i <= endPage; i++)
+                            {
+                                @if (i == paginatedStories.PageNumber)
+                                {
+                                    <li class="page-item active">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@i">@i</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                           asp-action="Index" asp-route-page="@i">@i</a>
+                                    </li>
+                                }
+                            }
+                            @if (paginatedStories.PageNext == paginatedStories.PageNumber)
+                            {
+                                <li class="page-item disabled text-muted">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="@paginatedStories.PageNext">
+                                        <span>&gt;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled text-muted">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="@paginatedStories.TotalPages">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="@paginatedStories.PageNext">
+                                        <span>&gt;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link py-2 px-4 m-1 rounded-3" asp-area="Client" asp-controller="Home"
+                                       asp-action="Index" asp-route-page="@paginatedStories.TotalPages">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- a pagination -->
+                }
+
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="main-tab">
+                    <div class="nav nav-tabs main-tab-menu">
+                        <a class="main-tab-link fs-17 active"
+                           data-bs-toggle="tab"
+                           href="#tab-categories"
+                           title="Truyện tranh theo thể loại">Thể loại</a>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="#tab-categories">
+                           <div class="row p-2 category-container">
+                                @if (string.IsNullOrEmpty(categoryId))
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@storySort"
+                                       asp-route-slug="tat-ca" asp-route-id=""
+                                       class="col-12 item-side fs-16 py-2 active">
+                                        Tất cả
+                                    </a>
+                                }else{
+                                    <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                       asp-route-status="@storyStatus" asp-route-sort="@storySort"
+                                       asp-route-slug="tat-ca" asp-route-id=""
+                                       class="col-12 item-side fs-16 py-2">
+                                        Tất cả
+                                    </a>
+                                }
+                                @foreach (var category in categories)
+                                {
+                                    if(category.Id == categoryId)
+                                    {
+                                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                           asp-route-status="@storyStatus" asp-route-sort="@storySort"
+                                           asp-route-slug="@category.Slug" asp-route-id="@category.Id"
+                                           class="col-6 item-side fs-16 py-2 active">
+                                            @category.Name
+                                        </a>
+                                    }else{
+                                        <a asp-area="Client" asp-controller="Story" asp-action="Search"
+                                           asp-route-status="@storyStatus" asp-route-sort="@storySort"
+                                           asp-route-slug="@category.Slug" asp-route-id="@category.Id"
+                                           class="col-6 item-side fs-16 py-2">
+                                            @category.Name
+                                        </a>
+                                    }
+                                }
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

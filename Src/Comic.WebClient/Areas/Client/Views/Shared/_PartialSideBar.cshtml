@@ -1,0 +1,153 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Comic.Domain.ResponseModels.PaginateModel
+@using Comic.Domain.ResponseModels.StoryModel
+@using Comic.Domain.RequestModels.PaginateModel
+@using Comic.WebClient.ApiClient.Client
+@inject IStoryApiClient _storyApiClient
+@{
+    //get recommeded stories
+    var newRecommendReq = new PaginateReq()
+    {
+        PageNumber = 1,
+        PageSize = 10,
+        SearchTerm = ""
+    };
+    var recommendStories = await _storyApiClient.GetRecommendAsync(newRecommendReq);
+    var topDayStories = recommendStories.Items.ToList();
+    var topWeekStories = recommendStories.Items.ToList();
+    var topMonthStories = recommendStories.Items.ToList();
+}
+<div class="main-tab">
+    <div class="nav nav-tabs main-tab-menu">
+        <a class="main-tab-link active"
+           data-bs-toggle="tab"
+           href="#tab-top-month"
+           title="BXH truyện tranh theo tháng">Top tháng</a>
+        <a class="main-tab-link"
+           data-bs-toggle="tab"
+           href="#tab-top-week"
+           title="BXH truyện tranh theo tuần">Top tuần</a>
+        <a class="main-tab-link"
+           data-bs-toggle="tab"
+           href="#tab-top-day"
+           title="BXH truyện tranh theo ngày">Top ngày</a>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="tab-top-month">
+            @foreach (var story in topDayStories)
+            {
+                <div class="tab-item">
+                    <span class="tab-item-index">@(topDayStories.IndexOf(story) + 1)</span>
+                    <div class="tab-item-img">
+                        <img src="@story.Avatar" alt="@story.Name" class="center" />
+                    </div>
+                    <div class="tab-item-info">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                        asp-route-slug="@story.Slug" asp-route-id="@story.Id" class="tab-item-title">
+                            <p>@story.Name</p>
+                        </a>
+                        <div class="tab-item-decs">
+                            @{
+                                var firstChapter = story.Chapters.FirstOrDefault();
+                                if (firstChapter == null)
+                                {
+                                    <span class="fs-14">Đang cập nhật</span>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                       asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@firstChapter.Slug"
+                                       asp-route-id="@firstChapter.Id" class="tab-item-chapter fs-14">@firstChapter.Name</a>
+                                }
+
+                            }
+                           
+                            <div class="tab-item-view pull-right">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>@story.View</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="tab-top-week">
+            @foreach (var story in topWeekStories)
+            {
+                <div class="tab-item">
+                    <span class="tab-item-index">@(topWeekStories.IndexOf(story)+1)</span>
+                    <div class="tab-item-img">
+                        <img src="@story.Avatar" alt="@story.Name" class="center" />
+                    </div>
+                    <div class="tab-item-info">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                           asp-route-slug="@story.Slug" asp-route-id="@story.Id" class="tab-item-title">
+                            <p>@story.Name</p>
+                        </a>
+                        <div class="tab-item-decs">
+                            @{
+                                var firstChapter = story.Chapters.FirstOrDefault();
+                                if (firstChapter == null)
+                                {
+                                    <span class="fs-14">Đang cập nhật</span>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                       asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@firstChapter.Slug"
+                                       asp-route-id="@firstChapter.Id" class="tab-item-chapter fs-14">@firstChapter.Name</a>
+                                }
+
+                            }
+
+                            <div class="tab-item-view pull-right">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>@story.View</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="tab-top-day">
+            @foreach (var story in topMonthStories)
+            {
+                <div class="tab-item">
+                    <span class="tab-item-index">@(topMonthStories.IndexOf(story)+1)</span>
+                    <div class="tab-item-img">
+                        <img src="@story.Avatar" alt="@story.Name" class="center" />
+                    </div>
+                    <div class="tab-item-info">
+                        <a asp-area="Client" asp-controller="Story" asp-action="Detail"
+                           asp-route-slug="@story.Slug" asp-route-id="@story.Id" class="tab-item-title">
+                            <p>@story.Name</p>
+                        </a>
+                        <div class="tab-item-decs">
+                            @{
+                                var firstChapter = story.Chapters.FirstOrDefault();
+                                if (firstChapter == null)
+                                {
+                                    <span class="fs-14">Đang cập nhật</span>
+                                }
+                                else
+                                {
+                                    <a asp-area="Client" asp-controller="Story" asp-action="DetailChapter"
+                                       asp-route-storySlug="@story.Slug" asp-route-chapterSlug="@firstChapter.Slug"
+                                       asp-route-id="@firstChapter.Id" class="tab-item-chapter fs-14">@firstChapter.Name</a>
+                                }
+
+                            }
+
+                            <div class="tab-item-view pull-right">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>@story.View</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>

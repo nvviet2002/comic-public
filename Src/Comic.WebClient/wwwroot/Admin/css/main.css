@@ -1,0 +1,11 @@
+﻿.text-overflow {
+    /*    white-space: nowrap;
+*/  display: block !important;
+    max-height: 20px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.container-overflow{
+    /*overflow: hidden;*/
+}

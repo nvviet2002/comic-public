@@ -1,0 +1,210 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý người dùng";
+    ViewBag.Page = "User";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <h4 class="mb-4">Danh sách người dùng</h4>
+
+    <div class="card">
+        <div class="card-datatable text-nowrap table-responsive">
+            <table id="userDatatable" class="datatables-ajax table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Email</th>
+                        <th>Tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Điểm</th>
+                        <th>Vai trò</th>
+                        <th>Tạo lúc</th>
+                        <th>Trạng thái</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!-- Add user Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Thêm mới người dùng</h3>
+                    </div>
+                    <form id="addUserForm" class="row" enctype="multipart/form-data">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserEmail">Email</label>
+                            <input type="text" id="addUserEmail" name="addUserEmail" class="form-control" placeholder="Email..." autofocus />
+                            <ul class="text-danger validate validateEmail"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3 form-password-toggle">
+                            <label class="form-label" for="addUserPassword">Mật khẩu</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" class="form-control" id="addUserPassword" name="addUserPassword" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="addUserPasswordToggle" />
+                                <span class="input-group-text cursor-pointer" id="addUserPasswordToggle"><i class="ti ti-eye-off"></i></span>
+                            </div>
+                            <ul class="text-danger validate validatePassword"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserName">Tên người dùng</label>
+                            <input type="text" id="addUserName" name="addUserName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserPhoneNumber">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text">VN(+84)</span>
+                                <input type="text" id="addUserPhoneNumber" name="addUserPhoneNumber" class="form-control phone-number-mask" placeholder="0826 236 271" />
+                            </div>
+                            <ul class="text-danger validate validatePhoneNumber"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserBirthday">Ngày sinh</label>
+                            <input type="text" id="addUserBirthday" name="addUserBirthday" class="form-control" placeholder="dd/mm/yyyy" readonly />
+                            <ul class="text-danger validate validateBirthday"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserPoint">Điểm số</label>
+                            <input type="text" id="addUserPoint" name="addUserPoint" class="form-control" placeholder="0.0" />
+                            <ul class="text-danger validate validatePoint"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserAvatar">Ảnh đại diện</label>
+                            <input type="file" id="addUserAvatar" name="addUserAvatar" class="form-control" accept="image/*" />
+                            <ul class="text-danger validate validateAvatar"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <img alt="Ảnh đại diện" id="addUserAvatarPreview" height="auto" width="40%" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="addUserRoleIds" class="form-label">Vai trò</label>
+                            <select id="addUserRoleIds" name="addUserRoleIds" title="--Không--" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="ti" data-tick-icon="ti-check text-white">
+  
+                            </select>
+                            <ul class="text-danger validate validateRoleIds"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="addUserIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="addUserIsActived" name="addUserIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateAvatar"></ul>
+                        </div>
+                        
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Tạo mới</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Add user Modal -->
+    <!-- Edit user Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content p-3 p-md-5">
+                <button type="button" class="btn-close btn-pinned" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h3 class="mb-2">Chỉnh sửa người dùng</h3>
+                    </div>
+                    <form id="editUserForm" class="row" enctype="multipart/form-data">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserEmail">Email</label>
+                            <input type="text" id="editUserEmail" name="editUserEmail" class="form-control" placeholder="Email..." autofocus />
+                            <ul class="text-danger validate validateEmail"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3 form-password-toggle">
+                            <label class="form-label" for="editUserPassword">Mật khẩu</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" class="form-control" id="editUserPassword" name="editUserPassword" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="editUserPasswordToggle" />
+                                <span class="input-group-text cursor-pointer" id="editUserPasswordToggle"><i class="ti ti-eye-off"></i></span>
+                            </div>
+                            <ul class="text-danger validate validatePassword"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserName">Tên người dùng</label>
+                            <input type="text" id="editUserName" name="editUserName" class="form-control" placeholder="Tên..." />
+                            <ul class="text-danger validate validateName"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserPhoneNumber">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text">VN(+84)</span>
+                                <input type="text" id="editUserPhoneNumber" name="editUserPhoneNumber" class="form-control phone-number-mask" placeholder="0826 236 271" />
+                            </div>
+                            <ul class="text-danger validate validatePhoneNumber"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserBirthday">Ngày sinh</label>
+                            <input type="text" id="editUserBirthday" name="editUserBirthday" class="form-control" placeholder="dd/mm/yyyy" readonly />
+                            <ul class="text-danger validate validateBirthday"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserPoint">Điểm số</label>
+                            <input type="text" id="editUserPoint" name="editUserPoint" class="form-control" placeholder="0.0" />
+                            <ul class="text-danger validate validatePoint"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserAvatar">Ảnh đại diện</label>
+                            <input type="file" id="editUserAvatar" name="editUserAvatar" class="form-control" accept="image/*" />
+                            <ul class="text-danger validate validateAvatar"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <img alt="Ảnh đại diện" id="editUserAvatarPreview" height="auto" width="40%" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editUserRoleIds" class="form-label">Vai trò</label>
+                            <select id="editUserRoleIds" name="editUserRoleIds" title="--Không--" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="ti" data-tick-icon="ti-check text-white">
+                            </select>
+                            <ul class="text-danger validate validateRoleIds"></ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="editUserIsActived">Hoạt động</label>
+                            <div class="form-control border-none">
+                                <label class="switch switch-lg">
+                                    <input type="checkbox" id="editUserIsActived" name="editUserIsActived" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <ul class="text-danger validate validateAvatar"></ul>
+                        </div>
+
+                        <div class="col-12 text-center demo-vertical-spacing">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Cập nhật</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Edit user Modal -->
+    <!-- /Modal -->
+</div>

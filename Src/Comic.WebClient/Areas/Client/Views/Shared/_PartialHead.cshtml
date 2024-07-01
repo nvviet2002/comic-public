@@ -1,0 +1,71 @@
+﻿@using Comic.WebClient.Areas.Client.Models
+@{
+    var seoModel = ViewBag.SeoModel as SeoModel;
+}
+
+<head>
+
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>@ViewBag.Title</title>
+    <!-- Seo -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="@seoModel.Copyright">
+    <meta name="author" content="Truyện tranh TruyenVV">
+    <meta name="google" content="notranslate">
+    <meta name="description" content="@seoModel.MetaDescription" />
+    <meta name="keywords" content="@seoModel.MetaKeywords" />
+    <link rel="canonical" href="@seoModel.CanonicalUrl"/>
+
+    <meta property="og:image" content="http://st.ntcdntempv3.com/data/sites/1/share.jpg">
+    <meta property="og:title" content="@ViewBag.Title">
+    <meta property="og:site_name" content="TruyenVV">
+    <meta property="og:url" content="@seoModel.CanonicalUrl">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="@seoModel.MetaDescription">
+    <meta itemprop="name" content="@ViewBag.Title">
+    <meta itemprop="description" content="@seoModel.MetaDescription">
+    <meta name="color-scheme" content="light only">
+
+    
+
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="~/client/img/favicon-truyenvv.png" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="~/admin/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="~/admin/vendor/libs/node-waves/node-waves.css" />
+    <link rel="stylesheet" href="~/client/vendor/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/client/vendor/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="~/client/vendor/css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="~/client/vendor/css/owl.theme.green.min.css" />
+  
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="~/client/css/main.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TM8B4X4984"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-TM8B4X4984');
+    </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7148649227764135"
+            crossorigin="anonymous"></script>
+   
+
+
+</head>
+
+
+
